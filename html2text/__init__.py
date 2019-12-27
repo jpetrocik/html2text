@@ -639,6 +639,7 @@ class HTML2Text(html.parser.HTMLParser):
                             self.o("<" + config.TABLE_MARKER_FOR_PAD + ">")
                             self.o("  \n")
                     else:
+                        self.table_start = False
                         if self.pad_tables:
                             self.o("</" + config.TABLE_MARKER_FOR_PAD + ">")
                             self.o("  \n")
@@ -655,8 +656,8 @@ class HTML2Text(html.parser.HTMLParser):
                 if tag == "tr" and not start and self.table_start:
                     # Underline table header
                     self.o("|".join(["---"] * self.td_count))
+                    # self.o("  \n")
                     self.soft_br()
-                    self.table_start = False
                 if tag in ["td", "th"] and start:
                     self.td_count += 1
 
@@ -678,6 +679,9 @@ class HTML2Text(html.parser.HTMLParser):
 
     def p(self) -> None:
         "Set pretty print to 1 or 2 lines"
+        # if self.table_start == True:
+        #     self.p_p = 0
+        #     return
         self.p_p = 1 if self.single_line_break else 2
 
     def soft_br(self) -> None:
@@ -922,8 +926,8 @@ class HTML2Text(html.parser.HTMLParser):
                         result += "\n"
                         newlines = 1
                     else:
-                        result += "\n\n"
-                        newlines = 2
+                        result += "\n"
+                        newlines = 1
                 else:
                     # Warning for the tempted!!!
                     # Be aware that obvious replacement of this with
