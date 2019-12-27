@@ -344,6 +344,8 @@ class HTML2Text(html.parser.HTMLParser):
         if tag == "br" and start:
             if self.blockquote > 0:
                 self.o("  \n> ")
+            elif self.table_start:
+                self.o(" ")
             else:
                 self.o("  \n")
 
@@ -644,7 +646,6 @@ class HTML2Text(html.parser.HTMLParser):
                     # Underline table header
                     self.o("|".join(["---"] * self.td_count))
                     self.o("  \n")
-                    self.soft_br()
                 if tag in ["td", "th"] and start:
                     self.td_count += 1
 
